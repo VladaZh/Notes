@@ -10,28 +10,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.notes.databinding.ActivityMainBinding
+import com.example.notes.db.MyAdapter
 import com.example.notes.db.MyDbManager
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(context = this)
-
-//    val edTitle = findViewById<EditText>(edTitle)
-//    val edContent = findViewById(R.id.edContent)
-//    val tvTest = findViewById(R.id.tvTest)
-    override fun onResume() {
-        super.onResume()
-        myDbManager.openDb()
-    }
-
-    fun onClickNew(view: View){
-        val i = Intent(this, EditActivity::class.java)
-        startActivity(i)
-    }
+    val myAdapter = MyAdapter(ArrayList())
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        init()
+
 
     }
 
@@ -39,4 +35,24 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         myDbManager.closeDb()
     }
+
+    override fun onResume() {
+        super.onResume()
+        myDbManager.openDb()
+        fillAdapter()
+    }
+
+    fun onClickNew(view: View){
+        val i = Intent(this, EditActivity::class.java)
+        startActivity(i)
+    }
+
+    fun init(){
+        binding.rcView.layoutManager = LinearLayoutManager(this)// элементы по вертикали
+        binding.rcView.adapter = myAdapter
+    }
+    fun fillAdapter(){
+        myAdapter.updateAdapter(myDbManager.readDbData())
+    }
+
 }

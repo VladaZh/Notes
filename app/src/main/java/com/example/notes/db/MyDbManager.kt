@@ -13,10 +13,11 @@ class MyDbManager(context: Context) {
         db = myDbHelper.writableDatabase // открытие дб
     }
 
-    fun insertToDb(title: String, content: String){ // записать в дб
+    fun insertToDb(title: String, content: String, uri: String){ // записать в дб
         val values = ContentValues().apply {
-            put(MyDbNameClass.COUMN_NAME_TITLE, title)
+            put(MyDbNameClass.COLUMN_NAME_TITLE, title)
             put(MyDbNameClass.COLUMN_NAME_CONTENT,content)
+            put(MyDbNameClass.COLUMN_NAME_IMAGE_URI,uri)
         }
         db?.insert(MyDbNameClass.TABLE_NAME, null, values)
     }
@@ -28,7 +29,7 @@ class MyDbManager(context: Context) {
 
         with(cursor){
             while(cursor?.moveToNext()!!){
-                val dataText = cursor.getString(cursor.getColumnIndexOrThrow(MyDbNameClass.COUMN_NAME_TITLE))
+                val dataText = cursor.getString(cursor.getColumnIndexOrThrow(MyDbNameClass.COLUMN_NAME_TITLE))
                 dataList.add(dataText.toString())
             }
         }
