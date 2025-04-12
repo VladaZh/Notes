@@ -1,6 +1,7 @@
 package com.example.notes
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.core.view.marginTop
 import com.example.notes.databinding.ActivityMainBinding
 import com.example.notes.databinding.EditActivityBinding
 import com.example.notes.db.MyDbManager
+import com.example.notes.db.MyIntentConstants
 
 class EditActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(this)
@@ -23,6 +25,7 @@ class EditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = EditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getMyIntents()
     }
 
     override fun onDestroy() {
@@ -40,6 +43,7 @@ class EditActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK && requestCode == imageRequestsCode){
             binding.imMainImage.setImageURI(data?.data)
             tempImageUri = data?.data.toString()
+            contentResolver.takePersistableUriPermission(data?.data!!, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
     }
 
@@ -60,15 +64,41 @@ class EditActivity : AppCompatActivity() {
     }
 
     fun onClickChooseImage(view: View) {
-        val intent = Intent(Intent.ACTION_PICK)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "image/*"
+
         startActivityForResult(intent, imageRequestsCode)
     }
     fun onClickSave(view: View) {
         val myTitle = binding.edTitle.text.toString()
         val myDesc = binding.edDesc.text.toString()
-        if (myTitle !== "" || myDesc != ""){
+        if (myTitle.isNotEmpty() && myDesc.isNotEmpty()){
             myDbManager.insertToDb(myTitle, myDesc, tempImageUri)
+            finish()
+        }
+    }
+    fun onClickBack(view: View){
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
+    }
+
+    fun getMyIntents(){
+        val i = intent
+
+        if (i != null){
+
+            if (i.getStringExtra(MyIntentConstants.I_TITLE_KEY) != null){
+
+                binding.edTitle.setText(i.getStringExtra(MyIntentConstants.I_TITLE_KEY))
+                binding.edDesc.setText(i.getStringExtra(MyIntentConstants.I_DESC_KEY))
+                if (i.getStringExtra(MyIntentConstants.I_URI_KEY) != "empty"){
+
+                    binding.mainImageLayout.visibility = View.VISIBLE
+                    binding.fbAddImage.visibility = View.GONE
+                    binding.imMainImage.setImageURI(Uri.parse(i.getStringExtra(MyIntentConstants.I_URI_KEY)))
+                }
+
+            }
         }
     }
 }

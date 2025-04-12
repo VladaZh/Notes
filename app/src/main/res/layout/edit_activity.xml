@@ -37,9 +37,9 @@
         android:background="@android:drawable/editbox_background"
         android:ems="10"
         android:gravity="top"
+        android:hint="@string/ed_desc_hint"
         android:inputType="text|textMultiLine"
         android:paddingStart="10dp"
-        android:hint="@string/ed_desc_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edTitle"
         app:layout_constraintHorizontal_bias="1.0"
@@ -69,6 +69,18 @@
         app:layout_constraintBottom_toTopOf="@+id/fbSave"
         app:layout_constraintEnd_toEndOf="@+id/fbSave"
         app:srcCompat="@drawable/ic_files" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:onClick="onClickBack"
+        app:layout_constraintBottom_toBottomOf="@+id/fbSave"
+        app:layout_constraintStart_toStartOf="@+id/edDesc"
+        app:srcCompat="@drawable/ic_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainImageLayout"

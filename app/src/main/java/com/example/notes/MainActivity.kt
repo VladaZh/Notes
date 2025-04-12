@@ -10,15 +10,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.notes.databinding.ActivityMainBinding
 import com.example.notes.db.MyAdapter
 import com.example.notes.db.MyDbManager
+import com.example.notes.EditActivity
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(context = this)
-    val myAdapter = MyAdapter(ArrayList())
+    val myAdapter = MyAdapter(ArrayList(), this)
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
-
-
     }
 
     override fun onDestroy() {
@@ -49,10 +51,36 @@ class MainActivity : AppCompatActivity() {
 
     fun init(){
         binding.rcView.layoutManager = LinearLayoutManager(this)// элементы по вертикали
+        val swapHelper = getSwapMg()
+        swapHelper.attachToRecyclerView(binding.rcView)
         binding.rcView.adapter = myAdapter
     }
     fun fillAdapter(){
-        myAdapter.updateAdapter(myDbManager.readDbData())
+
+        val list = myDbManager.readDbData()
+        myAdapter.updateAdapter(list)
+        if (list.size > 0){
+            binding.tvNoElements.visibility = View.GONE
+        } else {
+            binding.tvNoElements.visibility = View.VISIBLE
+        }
+    }
+    private fun getSwapMg(): ItemTouchHelper{
+        return ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+            override fun onMove(
+                p0: RecyclerView,
+                p1: RecyclerView.ViewHolder,
+                p2: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+                myAdapter.removeItem(p0.adapterPosition, myDbManager)
+
+            }
+        })
     }
 
 }
