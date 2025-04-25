@@ -26,24 +26,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainImageLayout" />
 
-    <EditText
-        android:id="@+id/edDesc"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="823dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:drawable/editbox_background"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="@string/ed_desc_hint"
-        android:inputType="text|textMultiLine"
-        android:paddingStart="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/edTitle"
-        app:layout_constraintStart_toStartOf="@+id/edTitle"
-        app:layout_constraintTop_toBottomOf="@+id/mainImageLayout"
-        app:layout_constraintVertical_bias="0.086" />
+        android:layout_height="800dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/edTitle"
+        tools:layout_editor_absoluteX="10dp">
+
+        <EditText
+            android:id="@+id/edDesc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:drawable/editbox_background"
+            android:ems="10"
+            android:gravity="top|start"
+            android:hint="@string/ed_desc_hint"
+            android:inputType="text|textMultiLine"
+            android:paddingStart="10dp"
+            android:scrollbars="vertical"/>
+    </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbSave"
@@ -53,7 +58,7 @@
         android:layout_marginEnd="16dp"
         android:clickable="true"
         android:onClick="onClickSave"
-        app:layout_constraintEnd_toEndOf="@+id/edDesc"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_save" />
 
