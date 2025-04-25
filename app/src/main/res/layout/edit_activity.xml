@@ -5,22 +5,22 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/textColor"
+    android:background="#E0D5F4"
     android:padding="10dp"
     tools:context=".EditActivity">
 
     <EditText
         android:id="@+id/edTitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="8dp"
         android:background="@android:drawable/editbox_background"
         android:ems="10"
+        android:hint="@string/ed_title_hint"
         android:inputType="text"
         android:padding="10dp"
-        android:hint="@string/ed_title_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,11 +29,10 @@
     <EditText
         android:id="@+id/edDesc"
         android:layout_width="match_parent"
-        android:layout_height="810dp"
+        android:layout_height="823dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
         android:background="@android:drawable/editbox_background"
         android:ems="10"
         android:gravity="top"
@@ -42,10 +41,9 @@
         android:paddingStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edTitle"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/edTitle"
-        app:layout_constraintTop_toBottomOf="@+id/edTitle"
-        app:layout_constraintVertical_bias="0.033" />
+        app:layout_constraintTop_toBottomOf="@+id/mainImageLayout"
+        app:layout_constraintVertical_bias="0.086" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbSave"
@@ -71,15 +69,15 @@
         app:srcCompat="@drawable/ic_files" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/goBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="812dp"
         android:clickable="true"
         android:onClick="onClickBack"
-        app:layout_constraintBottom_toBottomOf="@+id/fbSave"
         app:layout_constraintStart_toStartOf="@+id/edDesc"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,13 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.TypedValueCompat.dpToPx
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginTop
-import com.example.notes.databinding.ActivityMainBinding
 import com.example.notes.databinding.EditActivityBinding
 import com.example.notes.db.MyDbManager
 import com.example.notes.db.MyIntentConstants
@@ -51,7 +45,7 @@ class EditActivity : AppCompatActivity() {
         binding.mainImageLayout.visibility = View.VISIBLE
         binding.fbAddImage.visibility = View.GONE
         val params = binding.edTitle.layoutParams as ViewGroup.MarginLayoutParams
-        params.topMargin = 10//
+        params.topMargin = 10
         binding.edTitle.layoutParams = params
     }
 
@@ -70,8 +64,8 @@ class EditActivity : AppCompatActivity() {
         startActivityForResult(intent, imageRequestsCode)
     }
     fun onClickSave(view: View) {
-        val myTitle = binding.edTitle.text.toString()
-        val myDesc = binding.edDesc.text.toString()
+        var myTitle = binding.edTitle.text.toString()
+        var myDesc = binding.edDesc.text.toString()
         if (myTitle.isNotEmpty() && myDesc.isNotEmpty()){
             myDbManager.insertToDb(myTitle, myDesc, tempImageUri)
             finish()
@@ -94,9 +88,9 @@ class EditActivity : AppCompatActivity() {
                 if (i.getStringExtra(MyIntentConstants.I_URI_KEY) != "empty"){
 
                     binding.mainImageLayout.visibility = View.VISIBLE
-                    binding.fbAddImage.visibility = View.GONE
                     binding.imMainImage.setImageURI(Uri.parse(i.getStringExtra(MyIntentConstants.I_URI_KEY)))
                 }
+                binding.fbSave.visibility = View.GONE
 
             }
         }
