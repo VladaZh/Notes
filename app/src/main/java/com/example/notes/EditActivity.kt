@@ -4,12 +4,15 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notes.databinding.EditActivityBinding
 import com.example.notes.db.MyDbManager
 import com.example.notes.db.MyIntentConstants
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class EditActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(this)
@@ -23,6 +26,7 @@ class EditActivity : AppCompatActivity() {
         binding = EditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getMyIntents()
+        Log.d("timeLog", "Time ${getCurrentTime()}")
     }
 
     override fun onDestroy() {
@@ -73,9 +77,9 @@ class EditActivity : AppCompatActivity() {
         var myDesc = binding.edDesc.text.toString()
         if (myTitle.isNotEmpty() && myDesc.isNotEmpty()){
             if (isEditState){
-                myDbManager.updateItem(myTitle, myDesc, tempImageUri, id)
+                myDbManager.updateItem(myTitle, myDesc, tempImageUri, id, getCurrentTime())
             } else {
-                myDbManager.insertToDb(myTitle, myDesc, tempImageUri)
+                myDbManager.insertToDb(myTitle, myDesc, tempImageUri, getCurrentTime())
             }
             finish()
         }
@@ -122,6 +126,12 @@ class EditActivity : AppCompatActivity() {
         binding.imButtonEditImage.visibility = View.VISIBLE
         binding.imButtonDeleteImage.visibility = View.VISIBLE
 
+    }
+    private fun getCurrentTime():String{
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("dd-MM-yy kk:mm", Locale.getDefault())
+        val fTime = formatter.format(time)
+        return fTime.toString()
     }
 
 }

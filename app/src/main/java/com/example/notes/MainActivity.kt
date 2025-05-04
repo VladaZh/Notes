@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         myDbManager.openDb()
-        fillAdapter()
+        fillAdapter("")
     }
 
     fun onClickNew(view: View){
@@ -58,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         swapHelper.attachToRecyclerView(binding.rcView)
         binding.rcView.adapter = myAdapter
     }
-    fun fillAdapter(){
+    private fun fillAdapter(text: String){
 
-        val list = myDbManager.readDbData("")
+        val list = myDbManager.readDbData(text)
         myAdapter.updateAdapter(list)
         if (list.size > 0){
             binding.tvNoElements.visibility = View.GONE
@@ -76,9 +76,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                val list = myDbManager.readDbData(p0!!)
-                myAdapter.updateAdapter(list)
-                Log.d("SearchLog", "New Search : $p0")
+                fillAdapter(p0!!)
                 return true
             }
         })
