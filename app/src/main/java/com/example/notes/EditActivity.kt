@@ -1,6 +1,7 @@
 package com.example.notes
 
 import android.content.Intent
+import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -14,6 +15,8 @@ class EditActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(this)
     var tempImageUri = "empty"
     val imageRequestsCode = 10
+    var id = 0
+    var isEditState = false
     lateinit var binding: EditActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,8 @@ class EditActivity : AppCompatActivity() {
         val params = binding.edTitle.layoutParams as ViewGroup.MarginLayoutParams
         params.topMargin = 10
         binding.edTitle.layoutParams = params
+        binding.imButtonEditImage.visibility = View.VISIBLE
+        binding.imButtonDeleteImage.visibility = View.VISIBLE
     }
 
     fun onClickDeleteImage(view: View) {
@@ -67,7 +72,11 @@ class EditActivity : AppCompatActivity() {
         var myTitle = binding.edTitle.text.toString()
         var myDesc = binding.edDesc.text.toString()
         if (myTitle.isNotEmpty() && myDesc.isNotEmpty()){
-            myDbManager.insertToDb(myTitle, myDesc, tempImageUri)
+            if (isEditState){
+                myDbManager.updateItem(myTitle, myDesc, tempImageUri, id)
+            } else {
+                myDbManager.insertToDb(myTitle, myDesc, tempImageUri)
+            }
             finish()
         }
     }
@@ -78,16 +87,25 @@ class EditActivity : AppCompatActivity() {
 
     fun getMyIntents(){
         val i = intent
+        binding.fbEdit.visibility = View.GONE
+        binding.imButtonEditImage.visibility = View.GONE
+        binding.imButtonDeleteImage.visibility = View.GONE
 
         if (i != null){
 
             if (i.getStringExtra(MyIntentConstants.I_TITLE_KEY) != null){
 
                 binding.edTitle.setText(i.getStringExtra(MyIntentConstants.I_TITLE_KEY))
+                isEditState = true
+                binding.edTitle.isEnabled = false
+                binding.edDesc.isEnabled = false
+                binding.fbEdit.visibility = View.VISIBLE
                 binding.edDesc.setText(i.getStringExtra(MyIntentConstants.I_DESC_KEY))
+                id = i.getIntExtra(MyIntentConstants.I_ID_KEY, 0)
                 if (i.getStringExtra(MyIntentConstants.I_URI_KEY) != "empty"){
 
                     binding.mainImageLayout.visibility = View.VISIBLE
+
                     binding.imMainImage.setImageURI(Uri.parse(i.getStringExtra(MyIntentConstants.I_URI_KEY)))
                 }
                 binding.fbSave.visibility = View.GONE
@@ -95,4 +113,15 @@ class EditActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun onEditEnable(view: View) {
+        binding.edTitle.isEnabled = true
+        binding.edDesc.isEnabled = true
+        binding.fbSave.visibility = View.VISIBLE
+        binding.fbEdit.visibility = View.GONE
+        binding.imButtonEditImage.visibility = View.VISIBLE
+        binding.imButtonDeleteImage.visibility = View.VISIBLE
+
+    }
+
 }
