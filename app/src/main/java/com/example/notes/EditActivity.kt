@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.notes.databinding.EditActivityBinding
 import com.example.notes.db.MyDbManager
 import com.example.notes.db.MyIntentConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -76,12 +79,18 @@ class EditActivity : AppCompatActivity() {
         var myTitle = binding.edTitle.text.toString()
         var myDesc = binding.edDesc.text.toString()
         if (myTitle.isNotEmpty() && myDesc.isNotEmpty()){
-            if (isEditState){
-                myDbManager.updateItem(myTitle, myDesc, tempImageUri, id, getCurrentTime())
-            } else {
-                myDbManager.insertToDb(myTitle, myDesc, tempImageUri, getCurrentTime())
+
+            CoroutineScope(Dispatchers.Main).launch {
+
+                if (isEditState){
+                    myDbManager.updateItem(myTitle, myDesc, tempImageUri, id, getCurrentTime())
+                } else {
+                    myDbManager.insertToDb(myTitle, myDesc, tempImageUri, getCurrentTime())
+                }
+
+                finish()
             }
-            finish()
+
         }
     }
     fun onClickBack(view: View){

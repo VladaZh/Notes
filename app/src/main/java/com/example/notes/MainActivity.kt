@@ -7,25 +7,25 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.SearchView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.notes.databinding.ActivityMainBinding
 import com.example.notes.db.MyAdapter
 import com.example.notes.db.MyDbManager
-import com.example.notes.EditActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     val myDbManager = MyDbManager(context = this)
     val myAdapter = MyAdapter(ArrayList(), this)
     lateinit var binding: ActivityMainBinding
+    private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,13 +60,18 @@ class MainActivity : AppCompatActivity() {
     }
     private fun fillAdapter(text: String){
 
-        val list = myDbManager.readDbData(text)
-        myAdapter.updateAdapter(list)
-        if (list.size > 0){
-            binding.tvNoElements.visibility = View.GONE
-        } else {
-            binding.tvNoElements.visibility = View.VISIBLE
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.Main).launch{
+
+            val list = myDbManager.readDbData(text)
+                myAdapter.updateAdapter(list)
+            if (list.size > 0){
+                binding.tvNoElements.visibility = View.GONE
+            } else {
+                binding.tvNoElements.visibility = View.VISIBLE
+            }
         }
+
     }
 
     private fun initSearcView(){

@@ -6,6 +6,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MyDbManager(context: Context) {
     val myDbHelper = MyDbHelper(context)
@@ -15,7 +17,7 @@ class MyDbManager(context: Context) {
         db = myDbHelper.writableDatabase // открытие дб
     }
 
-    fun insertToDb(title: String, content: String, uri: String, time: String){ // записать в бд
+    suspend fun insertToDb(title: String, content: String, uri: String, time: String) = withContext(Dispatchers.IO){ // записать в бд
         val values = ContentValues().apply {
             put(MyDbNameClass.COLUMN_NAME_TITLE, title)
             put(MyDbNameClass.COLUMN_NAME_CONTENT, content)
@@ -26,7 +28,7 @@ class MyDbManager(context: Context) {
         db?.insert(MyDbNameClass.TABLE_NAME, null, values)
     }
 
-    fun updateItem(title: String, content: String, uri: String, id: Int, time: String){
+    suspend fun updateItem(title: String, content: String, uri: String, id: Int, time: String) = withContext(Dispatchers.IO){
         val values = ContentValues().apply {
             put(MyDbNameClass.COLUMN_NAME_TITLE, title)
             put(MyDbNameClass.COLUMN_NAME_CONTENT,content)
@@ -38,7 +40,7 @@ class MyDbManager(context: Context) {
         db?.update(MyDbNameClass.TABLE_NAME, values, selection, null)
     }
 
-    fun readDbData(searchText : String): ArrayList<ListItem>{ // считывание с бд
+    suspend fun readDbData(searchText : String): ArrayList<ListItem> = withContext(Dispatchers.IO){ // считывание с бд
         val dataList = ArrayList<ListItem>()
         val selection = "${MyDbNameClass.COLUMN_NAME_TITLE} like ?" //запрос в бд
         val cursor = db?.query(MyDbNameClass.TABLE_NAME, null, selection, arrayOf("%$searchText%"), //% - поиск по символу а не по целому слову
@@ -62,7 +64,7 @@ class MyDbManager(context: Context) {
         }
         cursor?.close()
 
-        return dataList
+        return@withContext dataList
     }
     fun closeDb(){
         myDbHelper.close()
