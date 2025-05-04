@@ -3,8 +3,10 @@ package com.example.notes
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init()
+        initSearcView()
     }
 
     override fun onDestroy() {
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun fillAdapter(){
 
-        val list = myDbManager.readDbData()
+        val list = myDbManager.readDbData("")
         myAdapter.updateAdapter(list)
         if (list.size > 0){
             binding.tvNoElements.visibility = View.GONE
@@ -65,6 +68,22 @@ class MainActivity : AppCompatActivity() {
             binding.tvNoElements.visibility = View.VISIBLE
         }
     }
+
+    private fun initSearcView(){
+        binding.Search.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                val list = myDbManager.readDbData(p0!!)
+                myAdapter.updateAdapter(list)
+                Log.d("SearchLog", "New Search : $p0")
+                return true
+            }
+        })
+    }
+
     private fun getSwapMg(): ItemTouchHelper{
         return ItemTouchHelper(object:ItemTouchHelper.SimpleCallback(0,
             ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){

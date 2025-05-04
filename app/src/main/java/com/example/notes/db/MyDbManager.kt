@@ -15,7 +15,7 @@ class MyDbManager(context: Context) {
         db = myDbHelper.writableDatabase // открытие дб
     }
 
-    fun insertToDb(title: String, content: String, uri: String){ // записать в дб
+    fun insertToDb(title: String, content: String, uri: String){ // записать в бд
         val values = ContentValues().apply {
             put(MyDbNameClass.COLUMN_NAME_TITLE, title)
             put(MyDbNameClass.COLUMN_NAME_CONTENT,content)
@@ -25,9 +25,10 @@ class MyDbManager(context: Context) {
         db?.insert(MyDbNameClass.TABLE_NAME, null, values)
     }
 
-    fun readDbData(): ArrayList<ListItem>{ // считывание с дб
+    fun readDbData(searchText : String): ArrayList<ListItem>{ // считывание с бд
         val dataList = ArrayList<ListItem>()
-        val cursor = db?.query(MyDbNameClass.TABLE_NAME, null, null, null,
+        val selection = "${MyDbNameClass.COLUMN_NAME_TITLE} like ?" //запрос в бд
+        val cursor = db?.query(MyDbNameClass.TABLE_NAME, null, selection, arrayOf("%$searchText%"), //% - поиск по символу а не по целому слову
             null, null, null)
 
         with(cursor){
