@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nvProfile"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/nvAdd"
+        android:title="Add note"
+        android:icon="@drawable/ic_action_name" />
+
+    <item
+        android:id="@+id/nvChat"
+        android:title="Chat"
+        android:icon="@drawable/ic_chat" />
+
+
+</menu>
